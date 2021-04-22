@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: clicars-ingress
+  name: tetris-ingress
 spec:
   rules:
     - host: tetris.127-0-0-1.nip.io
