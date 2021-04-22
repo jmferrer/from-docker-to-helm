@@ -54,3 +54,8 @@ kubectl get po
 helm upgrade --install tetris . --set replicas=5
 ```
 
+## Use gitops
+
+```
+git checkout gitops
+```
