@@ -13,9 +13,9 @@ docker run -it -p 8081:80 --rm uzyexe/tetris
 ## Kubernetes
 
 ```
-kubectl apply -f templates/deployment.yaml
-kubectl apply -f templates/service.yaml
-kubectl apply -f templates/ingress.yaml
+kubectl apply -f charts/tetris/templates/deployment.yaml
+kubectl apply -f charts/tetris/templates/service.yaml
+kubectl apply -f charts/tetris/templates/ingress.yaml
 ```
 
 ```
@@ -24,15 +24,15 @@ kubectl get ingress
 ```
 
 ```
-kubectl delete -f templates/deployment.yaml
-kubectl delete -f templates/service.yaml
-kubectl delete -f templates/ingress.yaml
+kubectl delete -f charts/tetris/templates/deployment.yaml
+kubectl delete -f charts/tetris/templates/service.yaml
+kubectl delete -f charts/tetris/templates/ingress.yaml
 ```
 
 ## Helm chart
 
 ```
-helm upgrade --install tetris .
+helm upgrade --install tetris ./charts/tetris -n tetris --create-namespace
 ```
 
 ```
@@ -42,39 +42,45 @@ kubectl get ingress
 
 ## Modify chart
 
-Take a look to *templates/deployment.yaml* where *{{ .Values.replicas }}* was added.
+Take a look to *charts/tetris/templates/deployment.yaml* where *{{ .Values.replicas }}* was added.
 
-This value is defined in *values.yaml*.
+This value is defined in *charts/tetris/values.yaml*.
 
 ```
-helm upgrade --install tetris .
+helm upgrade --install tetris ./charts/tetris -n tetris --create-namespace
 kubectl get po
 ```
 
 ## Redefine replicas:
 
 ```
-helm upgrade --install tetris . --set replicas=5
+helm upgrade --install tetris ./charts/tetris -n tetris --set replicas=5
 ```
 
-## Flux
+## Flux v2 (GitOps)
 
-Agregamos repositorio de flux:
+Install Flux controllers with Helm (didactic Helm-first workflow):
 ```
-helm repo add fluxcd https://charts.fluxcd.io
+helm repo add fluxcd-community https://fluxcd-community.github.io/helm-charts
 helm repo update
-helm repo list
+helm upgrade --install flux2 fluxcd-community/flux2 \
+	--namespace flux-system \
+	--create-namespace
 ```
 
-Instalamos flux para que monitorice la rama gitops de este repositorio:
+Optional check:
 ```
-kubectl create namespace flux
-helm upgrade --install flux fluxcd/flux \
-    --set git.url=https://github.com/jmferrer/from-docker-to-helm.git \
-    --set git.branch=gitops \
-    --set git.pollInterval=1m \
-    --namespace flux
-helm upgrade --install helm-operator fluxcd/helm-operator \
-    --set helm.versions=v3 \
-    --namespace flux
+kubectl get pods -n flux-system
+```
+
+Create the Flux source and apply the manifests:
+```
+kubectl apply -f tetris/tetris-source.yaml
+kubectl apply -f tetris/tetris-namespace.yaml
+kubectl apply -f tetris/tetris-release.yaml
+```
+
+Check pods:
+```
+kubectl get po -n tetris
 ```

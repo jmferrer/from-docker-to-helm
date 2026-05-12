@@ -1,0 +1,11 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: from-docker-to-helm
+  namespace: flux-system
+spec:
+  interval: 1m
+  ref:
+    branch: gitops
+  url: https://github.com/jmferrer/from-docker-to-helm.git
