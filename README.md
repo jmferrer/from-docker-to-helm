@@ -59,6 +59,11 @@ helm upgrade --install tetris ./charts/tetris -n tetris --set replicas=5
 
 ## Flux v2 (GitOps)
 
+Ensure there is not tetris in default namespace:
+```
+helm uninstall tetris -n default --ignore-not-found=true
+```
+
 Install Flux controllers with Helm (didactic Helm-first workflow):
 ```
 helm repo add fluxcd-community https://fluxcd-community.github.io/helm-charts
