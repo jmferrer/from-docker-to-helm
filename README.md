@@ -80,8 +80,8 @@ kubectl get pods -n flux-system
 
 Create the Flux source and the Flux Kustomization:
 ```
-kubectl apply -f tetris/tetris-source.yaml
-kubectl apply -f tetris/tetris-kustomization.yaml
+kubectl apply -f flux-system/from-docker-to-helm-source.yaml
+kubectl apply -f flux-system/tetris-kustomization.yaml
 ```
 
 With this setup, Flux manages both:
@@ -92,8 +92,8 @@ This means a `git push` to `gitops` can update:
 - chart templates and values consumed by the chart
 - the `HelmRelease` definition itself, for example `replicas` in `tetris/tetris-release.yaml`
 
-The `GitRepository` is still applied once with `kubectl`, because Flux needs a
-source object before it can reconcile the rest of the repository.
+The bootstrap manifests live outside `tetris/` on purpose, so the application
+Kustomization cannot prune its own `GitRepository` source.
 
 Check pods:
 ```
