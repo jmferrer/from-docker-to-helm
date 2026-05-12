@@ -7,7 +7,7 @@ microk8s with ingress addon enabled.
 ## Docker
 
 ```
-docker run -it -p 8081:80 --rm bsord/tetris
+docker run -it -p 8081:80 --rm uzyexe/tetris
 ```
 
 ## Kubernetes
@@ -33,6 +33,9 @@ kubectl delete -f templates/ingress.yaml
 
 ```
 helm upgrade --install tetris .
+```
+
+```
 kubectl get all
 kubectl get ingress
 ```
