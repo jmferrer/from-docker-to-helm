@@ -15,7 +15,7 @@ spec:
         app: tetris
     spec:
       containers:
-        - image: bsord/tetris
+        - image: uzyexe/tetris
           name: tetris
           ports:
             - containerPort: 80
