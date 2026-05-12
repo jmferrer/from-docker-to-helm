@@ -6,10 +6,13 @@ metadata:
   namespace: tetris
 spec:
   interval: 1m
+  install:
+    createNamespace: true
   releaseName: tetris
   chart:
     spec:
       chart: ./charts/tetris
+      reconcileStrategy: Revision
       sourceRef:
         kind: GitRepository
         name: from-docker-to-helm

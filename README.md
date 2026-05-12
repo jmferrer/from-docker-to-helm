@@ -78,14 +78,31 @@ Optional check:
 kubectl get pods -n flux-system
 ```
 
-Create the Flux source and apply the manifests:
+Create the Flux source and the Flux Kustomization:
 ```
 kubectl apply -f tetris/tetris-source.yaml
-kubectl apply -f tetris/tetris-namespace.yaml
-kubectl apply -f tetris/tetris-release.yaml
+kubectl apply -f tetris/tetris-kustomization.yaml
 ```
+
+With this setup, Flux manages both:
+- the Helm chart under `charts/tetris`
+- the application manifests under `tetris/`
+
+This means a `git push` to `gitops` can update:
+- chart templates and values consumed by the chart
+- the `HelmRelease` definition itself, for example `replicas` in `tetris/tetris-release.yaml`
+
+The `GitRepository` is still applied once with `kubectl`, because Flux needs a
+source object before it can reconcile the rest of the repository.
 
 Check pods:
 ```
 watch kubectl get po -n tetris
+```
+
+Check reconciliation status:
+```
+kubectl get gitrepositories.source.toolkit.fluxcd.io -n flux-system
+kubectl get kustomizations.kustomize.toolkit.fluxcd.io -n flux-system
+kubectl get helmreleases.helm.toolkit.fluxcd.io -n tetris
 ```
