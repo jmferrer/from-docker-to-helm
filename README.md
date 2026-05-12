@@ -82,5 +82,5 @@ kubectl apply -f tetris/tetris-release.yaml
 
 Check pods:
 ```
-kubectl get po -n tetris
+watch kubectl get po -n tetris
 ```
